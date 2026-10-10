@@ -1,0 +1,33 @@
+{% extends 'tareas/base.html' %}
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center;">
+    <h2>Gestor de Tareas</h2>
+    <span>Usuario: <strong>{{ user.username }}</strong> (<a href="{% url 'admin:logout' %}">Salir</a>)</span>
+</div>
+
+<!-- Solo se muestra el botón si tiene permiso para crear -->
+{% if perms.tareas.add_tarea %}
+    <a href="{% url 'crear' %}" class="btn-green">+ Nueva Tarea</a>
+{% endif %}
+
+<table>
+    <tr><th>Tarea</th><th>Prioridad</th><th>Acciones</th></tr>
+    {% for tarea in object_list %}
+    <tr>
+        <td>{% if tarea.completada %}<s>{{ tarea.titulo }}</s>{% else %}{{ tarea.titulo }}{% endif %}</td>
+        <td>{{ tarea.get_prioridad_display }}</td>
+        <td>
+            {% if perms.tareas.change_tarea %}
+                <a href="{% url 'editar' tarea.pk %}" class="btn-blue">Editar</a>
+            {% endif %}
+            
+            {% if perms.tareas.delete_tarea %}
+                <a href="{% url 'borrar' tarea.pk %}" class="btn-red">Borrar</a>
+            {% endif %}
+        </td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="3">No hay tareas registradas.</td></tr>
+    {% endfor %}
+</table>
+{% endblock %}
