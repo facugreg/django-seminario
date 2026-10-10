@@ -1,9 +1,43 @@
 {% extends 'tareas/base.html' %}
 {% block content %}
-<h2>¿Eliminar "{{ object.titulo }}"?</h2>
-<form method="post">
-    {% csrf_token %}
-    <button type="submit" class="btn-red">Sí, borrar</button>
-    <a href="{% url 'lista' %}">Cancelar</a>
-</form>
+<style>
+    .confirm-box { max-width: 420px; margin: 20px auto; text-align: center; }
+    .confirm-icon {
+        width: 56px;
+        height: 56px;
+        line-height: 56px;
+        margin: 0 auto 16px;
+        border-radius: 50%;
+        background: #fdecea;
+        color: #c62828;
+        font-size: 28px;
+        font-weight: bold;
+    }
+    .confirm-box h2 { margin: 0 0 8px; }
+    .confirm-box p { color: #666; font-size: 14px; margin: 0 0 24px; }
+    .confirm-actions { display: flex; justify-content: center; gap: 10px; }
+    .confirm-actions form { margin: 0; }
+    .confirm-actions button,
+.confirm-actions a {
+    padding: 12px 28px;
+    font-size: 16px;
+    font-weight: 600;
+}
+    .btn-gray { background: #eee; color: #333; }
+    .btn-gray:hover { background: #ddd; }
+</style>
+
+<div class="confirm-box">
+    <div class="confirm-icon">!</div>
+    <h2>¿Eliminar esta tarea?</h2>
+    <p><strong>{{ object.titulo }}</strong><br>Esta acción no se puede deshacer.</p>
+
+    <div class="confirm-actions">
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn-red">Sí, borrar</button>
+        </form>
+        <a href="{% url 'lista' %}" class="btn-gray">Cancelar</a>
+    </div>
+</div>
 {% endblock %}

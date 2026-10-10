@@ -2,14 +2,25 @@ from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from .models import Tarea
-
+from django import forms
 # 1. Lista de Tareas: Requiere estar logueado
 class TareaListView(LoginRequiredMixin, ListView):
     model = Tarea
     template_name = 'tareas/tarea_list.html'
 
+
+class FechaWidgetMixin:
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.fields['fecha_limite'].widget = forms.DateInput(
+            attrs={'type': 'date'},
+            format='%Y-%m-%d'
+        )
+        return form
+
+
 # 2. Crear Tarea: Requiere permiso de agregar (Group: Administrador)
-class TareaCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+class TareaCreateView(FechaWidgetMixin,LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = Tarea
     fields = ['titulo', 'descripcion', 'prioridad', 'fecha_limite', 'completada']
     template_name = 'tareas/tarea_form.html'
@@ -17,7 +28,7 @@ class TareaCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     success_url = reverse_lazy('lista')
 
 # 3. Editar Tarea: Requiere permiso de cambiar (Group: Administrador u Operador)
-class TareaUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+class TareaUpdateView(FechaWidgetMixin,LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = Tarea
     fields = ['titulo', 'descripcion', 'prioridad', 'fecha_limite', 'completada']
     template_name = 'tareas/tarea_form.html'

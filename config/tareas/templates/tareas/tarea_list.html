@@ -1,33 +1,68 @@
 {% extends 'tareas/base.html' %}
 {% block content %}
-<div style="display: flex; justify-content: space-between; align-items: center;">
+<style>
+    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .header h2 { margin: 0; }
+    .user-box { display: flex; align-items: center; gap: 10px; font-size: 14px; }
+    .user-box form { margin: 0; }
+    .btn-logout {
+        background: #eee;
+        color: #333;
+        padding: 6px 12px;
+        font-size: 13px;
+    }
+    .btn-logout:hover { background: #ddd; }
+    .toolbar { margin-bottom: 10px; }
+    table tr:hover td { background: #fafafa; }
+    th { background: #f0f0f5; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; }
+    td.acciones { white-space: nowrap; }
+    td.acciones a { font-size: 13px; padding: 5px 10px; }
+    .badge {
+        display: inline-block;
+        padding: 3px 10px;
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: 600;
+        background: #e8eaf6;
+        color: #3949ab;
+    }
+    .vacio { text-align: center; color: #888; padding: 25px; }
+</style>
+
+<div class="header">
     <h2>Gestor de Tareas</h2>
-    <span>Usuario: <strong>{{ user.username }}</strong> (<a href="{% url 'admin:logout' %}">Salir</a>)</span>
+    <div class="user-box">
+        <span>Usuario: <strong>{{ user.username }}</strong></span>
+        <form method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit" class="btn-logout">Salir</button>
+        </form>
+    </div>
 </div>
 
-<!-- Solo se muestra el botón si tiene permiso para crear -->
 {% if perms.tareas.add_tarea %}
+<div class="toolbar">
     <a href="{% url 'crear' %}" class="btn-green">+ Nueva Tarea</a>
+</div>
 {% endif %}
 
 <table>
     <tr><th>Tarea</th><th>Prioridad</th><th>Acciones</th></tr>
     {% for tarea in object_list %}
     <tr>
-        <td>{% if tarea.completada %}<s>{{ tarea.titulo }}</s>{% else %}{{ tarea.titulo }}{% endif %}</td>
-        <td>{{ tarea.get_prioridad_display }}</td>
-        <td>
+        <td>{% if tarea.completada %}<s style="color:#888;">{{ tarea.titulo }}</s>{% else %}{{ tarea.titulo }}{% endif %}</td>
+        <td><span class="badge">{{ tarea.get_prioridad_display }}</span></td>
+        <td class="acciones">
             {% if perms.tareas.change_tarea %}
                 <a href="{% url 'editar' tarea.pk %}" class="btn-blue">Editar</a>
             {% endif %}
-            
             {% if perms.tareas.delete_tarea %}
                 <a href="{% url 'borrar' tarea.pk %}" class="btn-red">Borrar</a>
             {% endif %}
         </td>
     </tr>
     {% empty %}
-    <tr><td colspan="3">No hay tareas registradas.</td></tr>
+    <tr><td colspan="3" class="vacio">No hay tareas registradas.</td></tr>
     {% endfor %}
 </table>
 {% endblock %}

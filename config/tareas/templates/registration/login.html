@@ -1,22 +1,54 @@
 {% extends 'tareas/base.html' %}
 
 {% block content %}
-<h2>Iniciar Sesión</h2>
+<style>
+    .login-box { max-width: 340px; margin: 10px auto; }
+    .login-box h2 { text-align: center; margin-bottom: 20px; }
+    .login-box label { display: block; font-weight: 600; margin-bottom: 6px; font-size: 14px; }
+    .login-box input[type="text"],
+    .login-box input[type="password"] {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 15px;
+        box-sizing: border-box;
+    }
+    .login-box input:focus {
+        outline: none;
+        border-color: #1565c0;
+        box-shadow: 0 0 0 3px rgba(21, 101, 192, 0.15);
+    }
+    .login-box .field { margin-bottom: 16px; }
+    .login-box button { width: 100%; padding: 10px; font-size: 15px; margin-top: 4px; }
+    .login-error {
+        background: #fdecea;
+        color: #c62828;
+        padding: 10px 12px;
+        border-radius: 6px;
+        font-size: 14px;
+        margin-bottom: 16px;
+    }
+</style>
 
-{% if form.errors %}
-<p style="color: red;">Usuario o contraseña incorrectos. Por favor, intentá de nuevo.</p>
-{% endif %}
+<div class="login-box">
+    <h2>Iniciar sesión</h2>
 
-<form method="post" action="{% url 'login' %}">
-    {% csrf_token %}
-    <p>
-        <label for="id_username">Usuario:</label><br>
-        {{ form.username }}
-    </p>
-    <p>
-        <label for="id_password">Contraseña:</label><br>
-        {{ form.password }}
-    </p>
-    <button type="submit" class="btn-green">Ingresar</button>
-</form>
+    {% if form.errors %}
+    <div class="login-error">Usuario o contraseña incorrectos. Intentá de nuevo.</div>
+    {% endif %}
+
+    <form method="post" action="{% url 'login' %}">
+        {% csrf_token %}
+        <div class="field">
+            <label for="id_username">Usuario</label>
+            {{ form.username }}
+        </div>
+        <div class="field">
+            <label for="id_password">Contraseña</label>
+            {{ form.password }}
+        </div>
+        <button type="submit" class="btn-green">Ingresar</button>
+    </form>
+</div>
 {% endblock %}
