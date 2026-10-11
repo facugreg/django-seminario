@@ -13,6 +13,7 @@ class Tarea(models.Model):
     fecha_limite = models.DateField("fecha límite", null=True, blank=True)
     completada = models.BooleanField(default=False)
     creada = models.DateTimeField(auto_now_add=True)
+   
 
     class Meta:
         ordering = ["completada", "fecha_limite"]
