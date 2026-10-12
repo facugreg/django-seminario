@@ -13,7 +13,10 @@ class Tarea(models.Model):
     fecha_limite = models.DateField("fecha límite", null=True, blank=True)
     completada = models.BooleanField(default=False)
     creada = models.DateTimeField(auto_now_add=True)
-   
+
+    #horas_estimadas = models.PositiveIntegerField("horas estimadas", null=True, blank=True)
+    #py manage.py makemigrations
+    #py manage.py migrate
 
     class Meta:
         ordering = ["completada", "fecha_limite"]
