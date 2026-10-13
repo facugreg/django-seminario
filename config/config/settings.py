@@ -9,6 +9,10 @@ https://docs.djangoproject.com/en/6.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.1/ref/settings/
 """
+
+import pymysql
+pymysql.install_as_MySQLdb()
+
 from decouple import config
 from pathlib import Path
 
@@ -134,3 +138,6 @@ MAILERS = {
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'lista'
 LOGOUT_REDIRECT_URL = 'login'
+
+
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
